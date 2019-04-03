@@ -15,7 +15,7 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View OR \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -23,12 +23,6 @@ class ContactController extends Controller
             $contacts = \Auth::User()->contacts->take(10);
             return response()->json(['contacts' => $contacts]);
         }
-        return view('app');
-    }
-
-    /* Create */
-    public function create(): View
-    {
         return view('app');
     }
 
