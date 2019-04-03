@@ -21,4 +21,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('contacts')->middleware(['auth'])->group(function() {
    Route::get('/', 'ContactController@index');
+   Route::post('/', 'ContactController@store');
+   Route::get('/create', function() {
+       return view('app');
+   });
+
 });

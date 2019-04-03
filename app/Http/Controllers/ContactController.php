@@ -8,6 +8,7 @@ use App\Contact;
 use App\Http\Requests\ContactRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ContactController extends Controller
 {
@@ -25,20 +26,19 @@ class ContactController extends Controller
         return view('app');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    /* Create */
+    public function create(): View
     {
-        //
+        return view('app');
     }
 
     /* Store */
     public function store(ContactRequest $request): JsonResponse
     {
-        //
+        \Auth::user()->contacts()->create($request->validated());
+//        return response()->json(['validated' => $request->validated()], 201);
+
+        return response()->json(['message' => 'created'], 201);
     }
 
     /**
