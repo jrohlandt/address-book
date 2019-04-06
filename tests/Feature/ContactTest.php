@@ -50,7 +50,30 @@ class ContactTest extends TestCase
         $this->assertEquals('jsmith@example.com', $c->email_addresses[1]['email_address']);
         $this->assertEquals('+27 21 555 5555', $c->phone_numbers[0]['phone_number']);
         $this->assertEquals('home', $c->phone_numbers[0]['type']);
+    }
 
+    /** @test */
+    public function can_store_contact_without_email_addresses()
+    {
+        $data = [
+            'first_name' => 'john',
+            'last_name' => 'smith',
+        ];
+
+        $response = $this->actingAs($this->user)->json('post', '/contacts', $data);
+
+        $response->assertStatus(201);
+        $contacts = Contact::where('user_id', $this->user->id)->get();
+        $this->assertCount(1, $contacts);
+
+        $c = $contacts->first();
+        $this->assertEquals('john', $c->first_name);
+
+        // Make sure that at least a empty array is stored.
+        $this->assertIsArray($c->email_addresses);
+        $this->assertIsArray($c->phone_numbers);
+        $this->assertEmpty($c->email_addresses);
+        $this->assertEmpty($c->phone_numbers);
     }
 
     /** @test */
