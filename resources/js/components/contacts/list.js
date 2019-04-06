@@ -14,9 +14,27 @@ export default class ContactList extends Component {
             contacts: [],
             placeholderText: 'Loading...',
             success: '',
+            searching: false,
         };
 
         this.deleteContact = this.deleteContact.bind(this);
+        this.search = this.search.bind(this);
+    }
+
+    search(e) {
+        if (e.target.value < 1) {
+            if (this.state.searching === false) {
+                return;
+            } else {
+                // if was previously searching then just get all contacts again.
+                this.setState({searching: false});
+                this.getContacts();
+                return;
+            }
+        }
+
+        this.setState({searching: true});
+        this.getContacts(e.target.value);
     }
 
     deleteContact(contactId) {
@@ -33,20 +51,26 @@ export default class ContactList extends Component {
         this.setState({contacts});
     }
 
+    getContacts(searchTerm='') {
+
+        let placeHolderText = searchTerm !== '' ? 'No results' : 'You don\'t have any contacts yet.';
+        Ajax.get('/contacts?search=' + searchTerm)
+            .then(res => {
+                let obj = {contacts: res.contacts};
+                obj['placeholderText'] = res.contacts.length > 0 ? '' : placeHolderText;
+                this.setState(obj);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }
+
     componentDidMount() {
         if (window.localStorage.getItem('success')) {
             this.setState({success: window.localStorage.getItem('success')});
             window.localStorage.removeItem('success');
         }
-        Ajax.get('/contacts')
-            .then(res => {
-                let obj = {contacts: res.contacts};
-                obj['placeholderText'] = res.contacts.length > 0 ? '' : 'You don\'t have any contacts yet.';
-                this.setState(obj);
-            })
-            .catch(err => {
-                console.error(err);
-            })
+        this.getContacts();
     }
 
     render() {
@@ -62,10 +86,13 @@ export default class ContactList extends Component {
 
                     <li><NavLink to="/contacts/create"><span>New Contact</span></NavLink></li>
 
+                    <input type="text" name="search" onChange={this.search} />
                     {
                         this.state.contacts.length > 0
                             ?
-                                <ContactsTable contacts={this.state.contacts} delete={this.deleteContact} />
+                                <div>
+                                    <ContactsTable contacts={this.state.contacts} delete={this.deleteContact} />
+                                </div>
                             :
                                 <h2>{this.state.placeholderText}</h2>
                     }

@@ -20,7 +20,18 @@ class ContactController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            $contacts = \Auth::User()->contacts()->orderBy('created_at', 'desc')->get()->take(10);
+            if (!empty(request('search'))) {
+                $search = request('search');
+                $contacts = \Auth::User()->contacts()
+                    ->where('first_name', 'like' , "%{$search}%")
+                    ->orWhere('last_name', 'like' , "%{$search}%")
+                    ->orderBy('first_name', 'asc')
+                    ->limit(20)
+                    ->get();
+            }
+            else {
+                $contacts = \Auth::User()->contacts()->orderBy('created_at', 'desc')->limit(20)->get();
+            }
             return response()->json(['contacts' => $contacts]);
         }
         return view('app');

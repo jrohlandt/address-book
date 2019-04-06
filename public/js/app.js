@@ -40483,13 +40483,36 @@ function (_Component) {
     _this.state = {
       contacts: [],
       placeholderText: 'Loading...',
-      success: ''
+      success: '',
+      searching: false
     };
     _this.deleteContact = _this.deleteContact.bind(_assertThisInitialized(_this));
+    _this.search = _this.search.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(ContactList, [{
+    key: "search",
+    value: function search(e) {
+      if (e.target.value < 1) {
+        if (this.state.searching === false) {
+          return;
+        } else {
+          // if was previously searching then just get all contacts again.
+          this.setState({
+            searching: false
+          });
+          this.getContacts();
+          return;
+        }
+      }
+
+      this.setState({
+        searching: true
+      });
+      this.getContacts(e.target.value);
+    }
+  }, {
     key: "deleteContact",
     value: function deleteContact(contactId) {
       var _this2 = this;
@@ -40510,10 +40533,26 @@ function (_Component) {
       });
     }
   }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
+    key: "getContacts",
+    value: function getContacts() {
       var _this3 = this;
 
+      var searchTerm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      var placeHolderText = searchTerm !== '' ? 'No results' : 'You don\'t have any contacts yet.';
+      _Helpers_AjaxHelper__WEBPACK_IMPORTED_MODULE_2__["default"].get('/contacts?search=' + searchTerm).then(function (res) {
+        var obj = {
+          contacts: res.contacts
+        };
+        obj['placeholderText'] = res.contacts.length > 0 ? '' : placeHolderText;
+
+        _this3.setState(obj);
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
       if (window.localStorage.getItem('success')) {
         this.setState({
           success: window.localStorage.getItem('success')
@@ -40521,16 +40560,7 @@ function (_Component) {
         window.localStorage.removeItem('success');
       }
 
-      _Helpers_AjaxHelper__WEBPACK_IMPORTED_MODULE_2__["default"].get('/contacts').then(function (res) {
-        var obj = {
-          contacts: res.contacts
-        };
-        obj['placeholderText'] = res.contacts.length > 0 ? '' : 'You don\'t have any contacts yet.';
-
-        _this3.setState(obj);
-      })["catch"](function (err) {
-        console.error(err);
-      });
+      this.getContacts();
     }
   }, {
     key: "render",
@@ -40549,10 +40579,14 @@ function (_Component) {
         }
       }, this.state.success) : '', react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["NavLink"], {
         to: "/contacts/create"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "New Contact"))), this.state.contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_contacts_table_js__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "New Contact"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "search",
+        onChange: this.search
+      }), this.state.contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_contacts_table_js__WEBPACK_IMPORTED_MODULE_5__["default"], {
         contacts: this.state.contacts,
         "delete": this.deleteContact
-      }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, this.state.placeholderText)));
+      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, this.state.placeholderText)));
     }
   }]);
 
