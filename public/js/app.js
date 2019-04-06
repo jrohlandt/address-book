@@ -38856,6 +38856,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Helpers/AjaxHelper.js */ "./resources/js/Helpers/AjaxHelper.js");
+/* harmony import */ var _phone_input_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./phone-input.js */ "./resources/js/components/contacts/phone-input.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -38881,6 +38882,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var ContactCreate =
 /*#__PURE__*/
 function (_Component) {
@@ -38898,10 +38900,12 @@ function (_Component) {
         last_name: '',
         email_addresses: [],
         phone_numbers: []
-      }
+      } // activePhoneNumber: -1,
+
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
+    _this.addPhoneNumber = _this.addPhoneNumber.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -38928,6 +38932,20 @@ function (_Component) {
         console.log(response);
       })["catch"](function (err) {
         console.log(err);
+      });
+    }
+  }, {
+    key: "addPhoneNumber",
+    value: function addPhoneNumber(obj) {
+      // console.log(typeof )
+      var contact = _objectSpread({}, this.state.contact); // if (typeof this.state.contact.phone_numbers[this.state.activePhoneNumber] !== 'undefined') {
+      //
+      // }
+
+
+      contact.phone_numbers.push(obj);
+      this.setState({
+        contact: contact
       });
     }
   }, {
@@ -38963,7 +38981,9 @@ function (_Component) {
         name: "last_name",
         onChange: this.handleChange,
         value: this.state.contact.last_name
-      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        addPhoneNumber: this.addPhoneNumber
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleSubmit
       }, "Create")));
     }
@@ -39073,6 +39093,147 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/contacts/phone-input.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/contacts/phone-input.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var PhoneInput =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(PhoneInput, _React$Component);
+
+  function PhoneInput(props) {
+    var _this;
+
+    _classCallCheck(this, PhoneInput);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(PhoneInput).call(this, props));
+    _this.state = {
+      phoneNumber: {
+        type: '',
+        phone_number: ''
+      }
+    };
+    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
+    _this.changeLabel = _this.changeLabel.bind(_assertThisInitialized(_this));
+    _this.addPhoneNumber = _this.addPhoneNumber.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(PhoneInput, [{
+    key: "changeLabel",
+    value: function changeLabel(label) {
+      var phoneNumber = _objectSpread({}, this.state.phoneNumber);
+
+      phoneNumber.type = label;
+      this.setState({
+        phoneNumber: phoneNumber
+      });
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(e) {
+      var phoneNumber = _objectSpread({}, this.state.phoneNumber);
+
+      if (e.target.name === 'phone_number') {
+        phoneNumber.phone_number = e.target.value;
+      }
+
+      this.setState({
+        phoneNumber: phoneNumber
+      });
+    }
+  }, {
+    key: "addPhoneNumber",
+    value: function addPhoneNumber() {
+      var phoneNumber = this.state.phoneNumber;
+
+      if (phoneNumber.type === '' || phoneNumber.phone_number === '') {
+        return;
+      } // todo check that phone number is valid
+
+
+      this.props.addPhoneNumber(this.state.phoneNumber);
+      this.setState({
+        phoneNumber: {
+          type: '',
+          phone_number: ''
+        }
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var activeLabel = this.state.phoneNumber.type;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Label:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "label"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'mobile' ? 'phone-label-active' : '',
+        onClick: function onClick() {
+          return _this2.changeLabel('mobile');
+        }
+      }, "mobile"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'home' ? 'phone-label-active' : '',
+        onClick: function onClick() {
+          return _this2.changeLabel('home');
+        }
+      }, "home"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'office' ? 'phone-label-active' : '',
+        onClick: function onClick() {
+          return _this2.changeLabel('office');
+        }
+      }, "office"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Phone number:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "phone_number",
+        onChange: this.handleChange,
+        value: this.state.phoneNumber.phone_number,
+        placeholder: "e.g. +27 82 555 5555"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.addPhoneNumber
+      }, "Add"));
+    }
+  }]);
+
+  return PhoneInput;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (PhoneInput);
 
 /***/ }),
 

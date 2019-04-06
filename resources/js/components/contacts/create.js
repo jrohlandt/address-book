@@ -13,10 +13,12 @@ export default class ContactCreate extends Component {
                 last_name: '',
                 email_addresses: [],
                 phone_numbers: [],
-            }
+            },
+            // activePhoneNumber: -1,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.addPhoneNumber = this.addPhoneNumber.bind(this);
     }
 
     handleChange(e) {
@@ -38,8 +40,16 @@ export default class ContactCreate extends Component {
             .catch(err => { console.log(err)});
     }
 
-    addPhoneNumber() {
+    addPhoneNumber(obj) {
+        // console.log(typeof )
 
+
+        let contact = {...this.state.contact};
+        // if (typeof this.state.contact.phone_numbers[this.state.activePhoneNumber] !== 'undefined') {
+        //
+        // }
+        contact.phone_numbers.push(obj);
+        this.setState({contact});
     }
 
     render() {
@@ -76,7 +86,7 @@ export default class ContactCreate extends Component {
                             />
                         </div>
 
-                        <PhoneInput addPhoneNumber={this.addPhoneNumber}/>
+                        <PhoneInput addPhoneNumber={this.addPhoneNumber} />
 
 
                     </div>
