@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {NavLink, Redirect} from 'react-router-dom';
 import Ajax from '../../Helpers/AjaxHelper.js';
 
 import PhoneInput from './phone-input.js';
@@ -14,11 +15,15 @@ export default class ContactCreate extends Component {
                 email_addresses: [],
                 phone_numbers: [],
             },
+            validationErrors: {},
+            redirectToContactList: false,
             // activePhoneNumber: -1,
         };
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addPhoneNumber = this.addPhoneNumber.bind(this);
+        this.displayValidationErrors = this.displayValidationErrors.bind(this);
     }
 
     handleChange(e) {
@@ -32,34 +37,53 @@ export default class ContactCreate extends Component {
         this.setState({contact});
     }
 
-    handleSubmit() {
-        Ajax.post('/contacts', this.state.contact)
-            .then(response => {
-                console.log(response);
-            })
-            .catch(err => { console.log(err)});
-    }
-
     addPhoneNumber(obj) {
-        // console.log(typeof )
-
-
         let contact = {...this.state.contact};
-        // if (typeof this.state.contact.phone_numbers[this.state.activePhoneNumber] !== 'undefined') {
-        //
-        // }
         contact.phone_numbers.push(obj);
         this.setState({contact});
     }
 
+    handleSubmit() {
+        // reset validation errors
+        this.setState({validationErrors: {}});
+
+        Ajax.post('/contacts', this.state.contact)
+            .then(res => {
+                window.localStorage.setItem('success', 'Contact created!');
+                this.setState({redirectToContactList: true});
+            })
+            .catch(err => {
+                if (typeof(err.validationErrors) !== 'undefined'/* && err.validationErrors.length > 0*/) {
+                    this.setState({validationErrors: err.validationErrors});
+                    return;
+                }
+                console.log('other error: ', err);
+            });
+    }
+
+    displayValidationErrors(key) {
+        const errors = this.state.validationErrors;
+        if (typeof(errors[key]) !== 'undefined' && errors[key].length > 0) {
+            return (
+                <div>
+                    <ul>
+                        {errors[key].map((v, i) => <li key={i}>{v}</li>)}
+                    </ul>
+                </div>
+            );
+        }
+        return '';
+    }
+
     render() {
+        if (this.state.redirectToContactList === true) {
+            return (<Redirect to="/contacts" />);
+        }
         return (
             <div className="page-content-container">
                 <div className="bread-crumbs-container">
-                    <ul>
-                        <li><a href="/contacts">Contacts / </a></li>
-                        <li><a href="/contacts/create">New Contact</a></li>
-                    </ul>
+                        <NavLink to="/contacts"><span>Contacts</span></NavLink> /
+                        <div className="current-crumb">New Contact</div>
                 </div>
                 <div className="content">
 
@@ -74,6 +98,7 @@ export default class ContactCreate extends Component {
                                 value={this.state.contact.first_name}
                             />
                         </div>
+                        { this.displayValidationErrors('first_name') }
 
                         <div className="form-row">
                             <label htmlFor="contact-lname-input">Last name:</label>
@@ -84,6 +109,24 @@ export default class ContactCreate extends Component {
                                 onChange={this.handleChange}
                                 value={this.state.contact.last_name}
                             />
+                        </div>
+                        { this.displayValidationErrors('last_name') }
+
+                        <div>
+                            <b>Phone numbers</b>
+                            {
+                                this.state.contact.phone_numbers.length > 0
+                                    ?   <ul>
+                                            { this.state.contact.phone_numbers.map((p, i) => <li key={i}><b>{p.type}</b> {p.phone_number}</li>) }
+                                        </ul>
+                                    : 'no phone numbers'
+                            }
+                        </div>
+
+
+                        <div>
+                            <b>Email addresses</b>
+                            {/* todo add email addresses */}
                         </div>
 
                         <PhoneInput addPhoneNumber={this.addPhoneNumber} />

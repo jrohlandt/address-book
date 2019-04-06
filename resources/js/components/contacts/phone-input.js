@@ -39,7 +39,7 @@ class PhoneInput extends React.Component {
     }
 
     render() {
-        let activeLabel = this.state.phoneNumber.type;
+        const activeLabel = this.state.phoneNumber.type;
         return (
             <div className="form-row">
                 <div>

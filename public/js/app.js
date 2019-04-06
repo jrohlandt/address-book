@@ -38855,8 +38855,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ContactCreate; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Helpers/AjaxHelper.js */ "./resources/js/Helpers/AjaxHelper.js");
-/* harmony import */ var _phone_input_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./phone-input.js */ "./resources/js/components/contacts/phone-input.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Helpers/AjaxHelper.js */ "./resources/js/Helpers/AjaxHelper.js");
+/* harmony import */ var _phone_input_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./phone-input.js */ "./resources/js/components/contacts/phone-input.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -38883,6 +38884,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var ContactCreate =
 /*#__PURE__*/
 function (_Component) {
@@ -38900,12 +38902,15 @@ function (_Component) {
         last_name: '',
         email_addresses: [],
         phone_numbers: []
-      } // activePhoneNumber: -1,
+      },
+      validationErrors: {},
+      redirectToContactList: false // activePhoneNumber: -1,
 
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.addPhoneNumber = _this.addPhoneNumber.bind(_assertThisInitialized(_this));
+    _this.displayValidationErrors = _this.displayValidationErrors.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -38926,22 +38931,9 @@ function (_Component) {
       });
     }
   }, {
-    key: "handleSubmit",
-    value: function handleSubmit() {
-      _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"].post('/contacts', this.state.contact).then(function (response) {
-        console.log(response);
-      })["catch"](function (err) {
-        console.log(err);
-      });
-    }
-  }, {
     key: "addPhoneNumber",
     value: function addPhoneNumber(obj) {
-      // console.log(typeof )
-      var contact = _objectSpread({}, this.state.contact); // if (typeof this.state.contact.phone_numbers[this.state.activePhoneNumber] !== 'undefined') {
-      //
-      // }
-
+      var contact = _objectSpread({}, this.state.contact);
 
       contact.phone_numbers.push(obj);
       this.setState({
@@ -38949,17 +38941,67 @@ function (_Component) {
       });
     }
   }, {
+    key: "handleSubmit",
+    value: function handleSubmit() {
+      var _this2 = this;
+
+      // reset validation errors
+      this.setState({
+        validationErrors: {}
+      });
+      _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"].post('/contacts', this.state.contact).then(function (res) {
+        window.localStorage.setItem('success', 'Contact created!');
+
+        _this2.setState({
+          redirectToContactList: true
+        });
+      })["catch"](function (err) {
+        if (typeof err.validationErrors !== 'undefined'
+        /* && err.validationErrors.length > 0*/
+        ) {
+            _this2.setState({
+              validationErrors: err.validationErrors
+            });
+
+            return;
+          }
+
+        console.log('other error: ', err);
+      });
+    }
+  }, {
+    key: "displayValidationErrors",
+    value: function displayValidationErrors(key) {
+      var errors = this.state.validationErrors;
+
+      if (typeof errors[key] !== 'undefined' && errors[key].length > 0) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, errors[key].map(function (v, i) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+            key: i
+          }, v);
+        })));
+      }
+
+      return '';
+    }
+  }, {
     key: "render",
     value: function render() {
+      if (this.state.redirectToContactList === true) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+          to: "/contacts"
+        });
+      }
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "page-content-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "bread-crumbs-container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "/contacts"
-      }, "Contacts / ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "/contacts/create"
-      }, "New Contact")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["NavLink"], {
+        to: "/contacts"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Contacts")), " /", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "current-crumb"
+      }, "New Contact")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "content"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-row"
@@ -38971,7 +39013,7 @@ function (_Component) {
         name: "first_name",
         onChange: this.handleChange,
         value: this.state.contact.first_name
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      })), this.displayValidationErrors('first_name'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "contact-lname-input"
@@ -38981,7 +39023,11 @@ function (_Component) {
         name: "last_name",
         onChange: this.handleChange,
         value: this.state.contact.last_name
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      })), this.displayValidationErrors('last_name'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Phone numbers"), this.state.contact.phone_numbers.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.contact.phone_numbers.map(function (p, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: i
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, p.type), " ", p.phone_number);
+      })) : 'no phone numbers'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Email addresses")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
         addPhoneNumber: this.addPhoneNumber
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.handleSubmit
@@ -39011,6 +39057,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Helpers_AjaxHelper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Helpers/AjaxHelper */ "./resources/js/Helpers/AjaxHelper.js");
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -39033,6 +39081,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var ContactList =
 /*#__PURE__*/
 function (_Component) {
@@ -39046,7 +39096,8 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(ContactList).call(this, props));
     _this.state = {
       contacts: [],
-      placeholderText: 'Loading...'
+      placeholderText: 'Loading...',
+      success: ''
     };
     return _this;
   }
@@ -39056,8 +39107,14 @@ function (_Component) {
     value: function componentWillMount() {
       var _this2 = this;
 
+      if (window.localStorage.getItem('success')) {
+        this.setState({
+          success: window.localStorage.getItem('success')
+        });
+        window.localStorage.removeItem('success');
+      }
+
       _Helpers_AjaxHelper__WEBPACK_IMPORTED_MODULE_2__["default"].get('/contacts').then(function (res) {
-        console.log('contacts: ', res.contacts);
         var obj = {
           contacts: res.contacts
         };
@@ -39075,13 +39132,17 @@ function (_Component) {
         className: "page-content-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "bread-crumbs-container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "/contacts"
-      }, "contacts / ")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["NavLink"], {
+        to: "/contacts"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "Contacts"))))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "content"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
-        href: "/contacts/create"
-      }, "New Contact")), this.state.contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.contacts.map(function (c) {
+      }, this.state.success !== '' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
+        style: {
+          color: 'green'
+        }
+      }, this.state.success) : '', react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["NavLink"], {
+        to: "/contacts/create"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "New Contact"))), this.state.contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.contacts.map(function (c) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: c.id
         }, c.first_name, " ", c.last_name);

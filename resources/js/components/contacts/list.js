@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Ajax from '../../Helpers/AjaxHelper';
+import {FaChalkboard} from "../../app";
+import {NavLink} from "react-router-dom";
 
 export default class ContactList extends Component {
 
@@ -10,13 +12,17 @@ export default class ContactList extends Component {
         this.state = {
             contacts: [],
             placeholderText: 'Loading...',
+            success: '',
         }
     }
 
     componentWillMount() {
+        if (window.localStorage.getItem('success')) {
+            this.setState({success: window.localStorage.getItem('success')});
+            window.localStorage.removeItem('success');
+        }
         Ajax.get('/contacts')
             .then(res => {
-                console.log('contacts: ', res.contacts);
                 let obj = {contacts: res.contacts};
                 obj['placeholderText'] = res.contacts.length > 0 ? '' : 'You don\'t have any contacts yet.';
                 this.setState(obj);
@@ -31,11 +37,13 @@ export default class ContactList extends Component {
             <div className="page-content-container">
                 <div className="bread-crumbs-container">
                     <ul>
-                        <li><a href="/contacts">contacts / </a></li>
+                        <li><NavLink to="/contacts"><span>Contacts</span></NavLink></li>
                     </ul>
                 </div>
                 <div className="content">
-                    <li><a href="/contacts/create">New Contact</a></li>
+                    { this.state.success !== '' ? <h2 style={{color: 'green'}}>{this.state.success}</h2> : '' }
+
+                    <li><NavLink to="/contacts/create"><span>New Contact</span></NavLink></li>
 
                     {
                         this.state.contacts.length > 0
