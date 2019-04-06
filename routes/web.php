@@ -18,14 +18,20 @@ Route::get('/', function () {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Auth::routes();
+
 Route::prefix('contacts')->middleware(['auth'])->group(function() {
-   Route::get('/', 'ContactController@index');
-   Route::post('/', 'ContactController@store');
-   Route::get('/create', function() {
-       return view('app');
-   });
+    Route::get('/', 'ContactController@index');
+    Route::post('/', 'ContactController@store');
+    Route::get('/{contactId}', 'ContactController@show');
+    Route::get('/create', function() { return view('app'); });
+    Route::get('/{contactId}/edit', function() { return view('app'); });
+    Route::put('/{contactId}', 'ContactController@update');
+    Route::delete('/{contactId}', 'ContactController@destroy');
+
 
 });
 
-Auth::routes();
+Route::resource('/example', 'ContactController');
+
 

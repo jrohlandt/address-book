@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Ajax from '../../Helpers/AjaxHelper';
 import {FaChalkboard} from "../../app";
 import {NavLink} from "react-router-dom";
+import ContactsTable from "./partials/contacts-table.js";
 
 export default class ContactList extends Component {
 
@@ -13,10 +14,26 @@ export default class ContactList extends Component {
             contacts: [],
             placeholderText: 'Loading...',
             success: '',
-        }
+        };
+
+        this.deleteContact = this.deleteContact.bind(this);
     }
 
-    componentWillMount() {
+    deleteContact(contactId) {
+        Ajax.delete('/contacts/'+contactId)
+            .then(res => {
+                this.setState({success: 'Contact deleted'});
+            })
+            .catch(err => {
+                // todo error notification
+                console.error(err);
+            });
+
+        const contacts = this.state.contacts.filter(c => c.id !== contactId);
+        this.setState({contacts});
+    }
+
+    componentDidMount() {
         if (window.localStorage.getItem('success')) {
             this.setState({success: window.localStorage.getItem('success')});
             window.localStorage.removeItem('success');
@@ -48,9 +65,7 @@ export default class ContactList extends Component {
                     {
                         this.state.contacts.length > 0
                             ?
-                                <ul>
-                                    { this.state.contacts.map( c => <li key={c.id}>{c.first_name} {c.last_name}</li>)}
-                                </ul>
+                                <ContactsTable contacts={this.state.contacts} delete={this.deleteContact} />
                             :
                                 <h2>{this.state.placeholderText}</h2>
                     }

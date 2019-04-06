@@ -17,6 +17,7 @@ export default class ContactCreate extends Component {
             },
             validationErrors: {},
             redirectToContactList: false,
+            mode: 'create', // or edit
             // activePhoneNumber: -1,
         };
 
@@ -47,9 +48,16 @@ export default class ContactCreate extends Component {
         // reset validation errors
         this.setState({validationErrors: {}});
 
-        Ajax.post('/contacts', this.state.contact)
+        let method = 'post';
+        let url = '/contacts';
+        if (this.state.mode === 'edit') {
+            method = 'put';
+            url = `/contacts/${this.state.contact.id}`;
+        }
+
+        Ajax[method](url, this.state.contact)
             .then(res => {
-                window.localStorage.setItem('success', 'Contact created!');
+                window.localStorage.setItem('success', 'Contact saved');
                 this.setState({redirectToContactList: true});
             })
             .catch(err => {
@@ -75,6 +83,24 @@ export default class ContactCreate extends Component {
         return '';
     }
 
+    componentDidMount() {
+        console.log('create mounted', );
+        if (typeof(this.props.match.params.contactId) !== 'undefined') {
+            this.setState({mode: 'edit'});
+            Ajax.get('/contacts/'+this.props.match.params.contactId)
+                .then(res => {
+                    console.log('contact', res.contact);
+                    let contact = res.contact;
+                    contact.phone_numbers = contact.phone_numbers === null ? [] : contact.phone_numbers;
+                    contact.email_addresses = contact.email_addresses === null ? [] : contact.email_addresses;
+                    this.setState({contact});
+                })
+                .catch(err => {
+                    console.error(err);
+                })
+        }
+    }
+
     render() {
         if (this.state.redirectToContactList === true) {
             return (<Redirect to="/contacts" />);
@@ -83,7 +109,7 @@ export default class ContactCreate extends Component {
             <div className="page-content-container">
                 <div className="bread-crumbs-container">
                         <NavLink to="/contacts"><span>Contacts</span></NavLink> /
-                        <div className="current-crumb">New Contact</div>
+                        <div className="current-crumb">{this.state.mode === 'edit' ? 'Edit Contact' : 'New Contact'}</div>
                 </div>
                 <div className="content">
 
@@ -134,7 +160,7 @@ export default class ContactCreate extends Component {
 
                     </div>
 
-                    <button onClick={this.handleSubmit}>Create</button>
+                    <button onClick={this.handleSubmit}>Save</button>
 
                 </div>
             </div>

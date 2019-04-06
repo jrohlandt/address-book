@@ -47,6 +47,7 @@ const App = () => (
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/contacts" component={ContactList} />
                 <Route path="/contacts/create" component={ContactCreate} />
+                <Route path="/contacts/:contactId/edit" component={ContactCreate} />
             </main>
         </div>
     </Router>
