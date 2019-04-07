@@ -82,7 +82,13 @@ export default class ContactList extends Component {
                 <div className="content">
 
                     <div>
-                        <input type="text" name="search" onChange={this.search} />
+                        <input
+                            type="search"
+                            name="search"
+                            onChange={this.search}
+                            placeholder="Search by first or last name"
+                            className="search-field"
+                        />
                         <Link to="/contacts/create" className="btn btn-new">New Contact</Link>
                     </div>
                     {

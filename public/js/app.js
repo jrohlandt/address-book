@@ -33464,9 +33464,11 @@ function (_Component) {
       }, this.state.success) : '', react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "content"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        type: "text",
+        type: "search",
         name: "search",
-        onChange: this.search
+        onChange: this.search,
+        placeholder: "Search by first or last name",
+        className: "search-field"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["Link"], {
         to: "/contacts/create",
         className: "btn btn-new"
@@ -33508,6 +33510,7 @@ var ContactsTable = function ContactsTable(props) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
       key: c.id
     }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, c.first_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, c.last_name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_icons_fi__WEBPACK_IMPORTED_MODULE_2__["FiTrash"], {
+      className: "action-icons",
       onClick: function onClick() {
         return props["delete"](c.id);
       },
@@ -33517,6 +33520,7 @@ var ContactsTable = function ContactsTable(props) {
       }
     }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
       to: "/contacts/".concat(c.id, "/edit"),
+      className: "action-icons",
       style: {
         "float": 'right'
       }

@@ -370,6 +370,10 @@ template {
   padding: 10px;
 }
 
+.action-icons {
+  color: #3490dc;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -392,6 +396,10 @@ main {
   align-items: center;
 }
 
+header > h1 {
+  font-size: 1em;
+}
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -401,13 +409,24 @@ main {
 .content > div:nth-child(1) {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
+  margin-bottom: 20px;
+}
+
+.search-field {
+  padding: 5px;
+  height: 30px;
+  margin-right: 10px;
+  border: thin solid rgba(0, 0, 0, 0.5);
+  border-radius: 3px;
 }
 
 .btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
   text-decoration: none;
   width: 100px;
   color: white;
@@ -430,6 +449,10 @@ main {
 }
 
 @media screen and (min-width: 700px) {
+  header > h1 {
+    font-size: 2em;
+  }
+
   .wrapper {
     width: 700px;
   }
