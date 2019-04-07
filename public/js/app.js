@@ -33093,6 +33093,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Helpers/AjaxHelper.js */ "./resources/js/Helpers/AjaxHelper.js");
 /* harmony import */ var _phone_input_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./phone-input.js */ "./resources/js/components/contacts/phone-input.js");
+/* harmony import */ var _email_input_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./email-input.js */ "./resources/js/components/contacts/email-input.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -33114,6 +33115,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -33147,6 +33149,7 @@ function (_Component) {
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
     _this.addPhoneNumber = _this.addPhoneNumber.bind(_assertThisInitialized(_this));
+    _this.addEmailAddress = _this.addEmailAddress.bind(_assertThisInitialized(_this));
     _this.displayValidationErrors = _this.displayValidationErrors.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -33184,6 +33187,27 @@ function (_Component) {
 
       state.contact.phone_numbers.push(obj);
       state.validationErrors.phone_numbers = [];
+      this.setState(state);
+    }
+  }, {
+    key: "addEmailAddress",
+    value: function addEmailAddress(obj) {
+      console.log('email ', obj);
+
+      if (obj.email_address.length > 256 || obj.email_address.indexOf('@') < 1) {
+        var errors = _objectSpread({}, this.state.validationErrors);
+
+        errors.email_addresses = ['Invalid email address'];
+        this.setState({
+          validationErrors: errors
+        });
+        return;
+      }
+
+      var state = _objectSpread({}, this.state);
+
+      state.contact.email_addresses.push(obj);
+      state.validationErrors.email_addresses = [];
       this.setState(state);
     }
   }, {
@@ -33314,7 +33338,19 @@ function (_Component) {
         className: "no-phone-numbers"
       }, "no phone numbers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
         addPhoneNumber: this.addPhoneNumber
-      }), this.displayValidationErrors('phone_numbers')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Email addresses"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), this.displayValidationErrors('phone_numbers')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Email Addresses"), this.state.contact.email_addresses.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "form-phone-number-list"
+      }, this.state.contact.email_addresses.map(function (p, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: i
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, p.type), " ", p.email_address);
+      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "no-phone-numbers"
+      }, "no email addresses"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_email_input_js__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        addItem: this.addEmailAddress
+      }), this.displayValidationErrors('email_addresses'))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-button-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/contacts",
@@ -33333,6 +33369,169 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/contacts/email-input.js":
+/*!*********************************************************!*\
+  !*** ./resources/js/components/contacts/email-input.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_icons_fi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-icons/fi */ "./node_modules/react-icons/fi/index.mjs");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var EmailInput =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(EmailInput, _React$Component);
+
+  function EmailInput(props) {
+    var _this;
+
+    _classCallCheck(this, EmailInput);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(EmailInput).call(this, props));
+    _this.state = {
+      item: {
+        type: 'work',
+        email_address: ''
+      },
+      showLabels: false
+    };
+    _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
+    _this.changeLabel = _this.changeLabel.bind(_assertThisInitialized(_this));
+    _this.toggleShowLabels = _this.toggleShowLabels.bind(_assertThisInitialized(_this));
+    _this.addItem = _this.addItem.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(EmailInput, [{
+    key: "changeLabel",
+    value: function changeLabel(label) {
+      var item = _objectSpread({}, this.state.item);
+
+      item.type = label;
+      this.setState({
+        item: item,
+        showLabels: false
+      });
+    }
+  }, {
+    key: "toggleShowLabels",
+    value: function toggleShowLabels() {
+      this.setState({
+        showLabels: !this.state.showLabels
+      });
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(e) {
+      var item = _objectSpread({}, this.state.item);
+
+      if (e.target.name === 'item_input') {
+        item.email_address = e.target.value;
+      }
+
+      this.setState({
+        item: item
+      });
+    }
+  }, {
+    key: "addItem",
+    value: function addItem() {
+      var item = this.state.item;
+
+      if (item.type === '' || item.email_address === '') {
+        return;
+      }
+
+      this.props.addItem(this.state.item);
+
+      if (item.email_address.length > 256 || item.email_address.indexOf('@') < 1) {
+        return;
+      }
+
+      this.setState({
+        item: {
+          type: 'work',
+          email_address: ''
+        }
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var activeLabel = this.state.item.type;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "custom-select"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "custom-select-label",
+        onClick: this.toggleShowLabels
+      }, activeLabel, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_icons_fi__WEBPACK_IMPORTED_MODULE_1__["FiChevronDown"], null)), this.state.showLabels ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "custom-select-label-list"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'home' ? 'custom-select-active' : '',
+        onClick: function onClick() {
+          return _this2.changeLabel('home');
+        }
+      }, "home"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'work' ? 'custom-select-active' : '',
+        onClick: function onClick() {
+          return _this2.changeLabel('work');
+        }
+      }, "work"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'other' ? 'custom-select-active' : '',
+        onClick: function onClick() {
+          return _this2.changeLabel('other');
+        }
+      }, "other")) : ''), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "item_input",
+        onChange: this.handleChange,
+        value: this.state.item.email_address,
+        placeholder: "name@example.com"
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "custom-select-done",
+        onClick: this.addItem
+      }, "done"));
+    }
+  }]);
+
+  return EmailInput;
+}(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
+
+/* harmony default export */ __webpack_exports__["default"] = (EmailInput);
 
 /***/ }),
 

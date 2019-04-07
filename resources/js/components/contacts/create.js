@@ -3,6 +3,7 @@ import {Link, NavLink, Redirect} from 'react-router-dom';
 import Ajax from '../../Helpers/AjaxHelper.js';
 
 import PhoneInput from './phone-input.js';
+import EmailInput from './email-input.js';
 
 export default class ContactCreate extends Component {
 
@@ -24,6 +25,7 @@ export default class ContactCreate extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.addPhoneNumber = this.addPhoneNumber.bind(this);
+        this.addEmailAddress = this.addEmailAddress.bind(this);
         this.displayValidationErrors = this.displayValidationErrors.bind(this);
     }
 
@@ -49,6 +51,21 @@ export default class ContactCreate extends Component {
         let state = {...this.state};
         state.contact.phone_numbers.push(obj);
         state.validationErrors.phone_numbers = [];
+        this.setState(state);
+    }
+
+    addEmailAddress(obj) {
+        console.log('email ', obj);
+        if (obj.email_address.length > 256 || obj.email_address.indexOf('@') < 1) {
+            let errors = {...this.state.validationErrors};
+            errors.email_addresses = ['Invalid email address'];
+            this.setState({validationErrors: errors});
+            return;
+        }
+
+        let state = {...this.state};
+        state.contact.email_addresses.push(obj);
+        state.validationErrors.email_addresses = [];
         this.setState(state);
     }
 
@@ -163,9 +180,18 @@ export default class ContactCreate extends Component {
                         </div>
 
 
-                        <div>
-                            <b>Email addresses</b>
-                            {/* todo add email addresses */}
+                        <div className="form-row">
+                            <h3>Email Addresses</h3>
+                            {
+                                this.state.contact.email_addresses.length > 0
+                                    ?   <ul className="form-phone-number-list">
+                                            { this.state.contact.email_addresses.map((p, i) => <li key={i}><span>{p.type}</span> {p.email_address}</li>) }
+                                        </ul>
+                                    : <div className="no-phone-numbers">no email addresses</div>
+                            }
+                            <EmailInput addItem={this.addEmailAddress} />
+                            { this.displayValidationErrors('email_addresses') }
+
                         </div>
 
 
