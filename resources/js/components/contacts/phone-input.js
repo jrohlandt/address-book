@@ -1,5 +1,6 @@
 import React from "react";
 
+import { FiChevronDown } from 'react-icons/fi';
 
 class PhoneInput extends React.Component {
     constructor(props) {
@@ -39,44 +40,48 @@ class PhoneInput extends React.Component {
         if (phoneNumber.type === '' || phoneNumber.phone_number === '') {
             return;
         }
-        // todo check that phone number is valid
         this.props.addPhoneNumber(this.state.phoneNumber);
+
+        if (phoneNumber.phone_number.length > 20) {
+            return;
+        }
         this.setState({phoneNumber: {type: 'mobile', phone_number: ''}});
     }
 
     render() {
         const activeLabel = this.state.phoneNumber.type;
         return (
-            <div className="form-row">
                 <div className="custom-select">
-                    <div
-                        className="custom-select-label"
-                        onClick={this.toggleShowLabels}
-                    >
-                        {activeLabel}
-                        {
-                            this.state.showLabels
-                                ?   <ul className="custom-select-label-list">
-                                        <li className={activeLabel === 'mobile' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('mobile')}>mobile</li>
-                                        <li className={activeLabel === 'home' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('home')}>home</li>
-                                        <li className={activeLabel === 'work' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('work')}>work</li>
-                                        <li className={activeLabel === 'other' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('other')}>other</li>
-                                    </ul>
-                                : ''
-                        }
-                    </div>
+                    <div>
+                        <div
+                            className="custom-select-label"
+                            onClick={this.toggleShowLabels}
+                        >
+                            {activeLabel}
+                            <span><FiChevronDown /></span>
+                            {
+                                this.state.showLabels
+                                    ?   <ul className="custom-select-label-list">
+                                            <li className={activeLabel === 'mobile' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('mobile')}>mobile</li>
+                                            <li className={activeLabel === 'home' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('home')}>home</li>
+                                            <li className={activeLabel === 'work' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('work')}>work</li>
+                                            <li className={activeLabel === 'other' ? 'custom-select-active' : ''} onClick={() => this.changeLabel('other')}>other</li>
+                                        </ul>
+                                    : ''
+                            }
+                        </div>
 
-                    <input
-                        type="text"
-                        name="phone_number"
-                        onChange={this.handleChange}
-                        value={this.state.phoneNumber.phone_number}
-                        placeholder="e.g. +27 82 555 5555"
-                    />
-                    <button onClick={this.addPhoneNumber}>Add</button>
+                        <input
+                            type="text"
+                            name="phone_number"
+                            onChange={this.handleChange}
+                            value={this.state.phoneNumber.phone_number}
+                            placeholder="e.g. +27 82 555 5555"
+                        />
+                    </div>
+                    <div className="custom-select-done" onClick={this.addPhoneNumber}>done</div>
                 </div>
 
-            </div>
         );
     }
 }

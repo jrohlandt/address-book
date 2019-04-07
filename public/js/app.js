@@ -33170,12 +33170,21 @@ function (_Component) {
   }, {
     key: "addPhoneNumber",
     value: function addPhoneNumber(obj) {
-      var contact = _objectSpread({}, this.state.contact);
+      if (obj.phone_number.length > 20) {
+        var errors = _objectSpread({}, this.state.validationErrors);
 
-      contact.phone_numbers.push(obj);
-      this.setState({
-        contact: contact
-      });
+        errors.phone_numbers = ['Invalid phone number'];
+        this.setState({
+          validationErrors: errors
+        });
+        return;
+      }
+
+      var state = _objectSpread({}, this.state);
+
+      state.contact.phone_numbers.push(obj);
+      state.validationErrors.phone_numbers = [];
+      this.setState(state);
     }
   }, {
     key: "handleSubmit",
@@ -33218,9 +33227,12 @@ function (_Component) {
     key: "displayValidationErrors",
     value: function displayValidationErrors(key) {
       var errors = this.state.validationErrors;
+      if (errors.length < 1) return;
 
       if (typeof errors[key] !== 'undefined' && errors[key].length > 0) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, errors[key].map(function (v, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+          className: "validation-errors"
+        }, errors[key].map(function (v, i) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
             key: i
           }, v);
@@ -33292,13 +33304,17 @@ function (_Component) {
         value: this.state.contact.last_name
       }), this.displayValidationErrors('last_name')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Phone numbers"), this.state.contact.phone_numbers.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.contact.phone_numbers.map(function (p, i) {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", null, "Phone numbers"), this.state.contact.phone_numbers.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "form-phone-number-list"
+      }, this.state.contact.phone_numbers.map(function (p, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: i
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, p.type), " ", p.phone_number);
-      })) : 'no phone numbers', react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, p.type), " ", p.phone_number);
+      })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "no-phone-numbers"
+      }, "no phone numbers"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
         addPhoneNumber: this.addPhoneNumber
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Email addresses"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), this.displayValidationErrors('phone_numbers')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Email addresses"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-button-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
         to: "/contacts",
@@ -33547,6 +33563,7 @@ var ContactsTable = function ContactsTable(props) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_icons_fi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-icons/fi */ "./node_modules/react-icons/fi/index.mjs");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -33568,6 +33585,7 @@ function _assertThisInitialized(self) { if (self === void 0) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -33634,10 +33652,14 @@ function (_React$Component) {
 
       if (phoneNumber.type === '' || phoneNumber.phone_number === '') {
         return;
-      } // todo check that phone number is valid
-
+      }
 
       this.props.addPhoneNumber(this.state.phoneNumber);
+
+      if (phoneNumber.phone_number.length > 20) {
+        return;
+      }
+
       this.setState({
         phoneNumber: {
           type: 'mobile',
@@ -33652,13 +33674,11 @@ function (_React$Component) {
 
       var activeLabel = this.state.phoneNumber.type;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "custom-select"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "custom-select-label",
         onClick: this.toggleShowLabels
-      }, activeLabel, this.state.showLabels ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+      }, activeLabel, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_icons_fi__WEBPACK_IMPORTED_MODULE_1__["FiChevronDown"], null)), this.state.showLabels ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
         className: "custom-select-label-list"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
         className: activeLabel === 'mobile' ? 'custom-select-active' : '',
@@ -33686,9 +33706,10 @@ function (_React$Component) {
         onChange: this.handleChange,
         value: this.state.phoneNumber.phone_number,
         placeholder: "e.g. +27 82 555 5555"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "custom-select-done",
         onClick: this.addPhoneNumber
-      }, "Add")));
+      }, "done"));
     }
   }]);
 

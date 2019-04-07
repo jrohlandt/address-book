@@ -367,28 +367,36 @@ template {
 .custom-select {
   display: flex;
   justify-content: flex-start;
-  width: 100%;
+  align-items: center;
+  width: 300px;
+}
+
+.custom-select > div:first-child {
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: thin solid #5a6268;
 }
 
 .custom-select-label {
   position: relative;
-  background: #5a6268;
-  padding: 5px;
+  width: 100px;
+  padding: 10px;
   cursor: pointer;
+  border-right: thin solid #5a6268;
 }
 
 .custom-select-label-list {
   position: absolute;
   left: 0;
   bottom: -1;
-  width: 150px;
+  width: 100px;
   background: whitesmoke;
   margin-top: 5px;
 }
 
 .custom-select-label-list li {
   list-style: none;
-  padding: 5px;
+  padding: 5px 15px;
 }
 
 .custom-select-label-list li:hover {
@@ -397,6 +405,42 @@ template {
 
 .custom-select-active {
   color: #3490dc;
+}
+
+.custom-select input {
+  border: none;
+  padding: 0 10px;
+  overflow: hidden;
+}
+
+.custom-select-done {
+  margin-left: 10px;
+  cursor: pointer;
+  color: #3490dc;
+}
+
+.form-phone-number-list {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.form-phone-number-list li {
+  padding: 5px;
+}
+
+.form-phone-number-list li span {
+  font-weight: bold;
+  color: #f66D9b;
+}
+
+.no-phone-numbers {
+  color: #f66D9b;
+}
+
+.validation-errors li {
+  list-style: none;
+  padding: 2px;
+  color: #e3342f;
 }
 
 .btn {

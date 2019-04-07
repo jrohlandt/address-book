@@ -39,9 +39,17 @@ export default class ContactCreate extends Component {
     }
 
     addPhoneNumber(obj) {
-        let contact = {...this.state.contact};
-        contact.phone_numbers.push(obj);
-        this.setState({contact});
+        if (obj.phone_number.length > 20) {
+            let errors = {...this.state.validationErrors};
+            errors.phone_numbers = ['Invalid phone number'];
+            this.setState({validationErrors: errors});
+            return;
+        }
+
+        let state = {...this.state};
+        state.contact.phone_numbers.push(obj);
+        state.validationErrors.phone_numbers = [];
+        this.setState(state);
     }
 
     handleSubmit() {
@@ -71,10 +79,13 @@ export default class ContactCreate extends Component {
 
     displayValidationErrors(key) {
         const errors = this.state.validationErrors;
+
+        if (errors.length < 1) return;
+
         if (typeof(errors[key]) !== 'undefined' && errors[key].length > 0) {
             return (
                 <div>
-                    <ul>
+                    <ul className="validation-errors">
                         {errors[key].map((v, i) => <li key={i}>{v}</li>)}
                     </ul>
                 </div>
@@ -138,15 +149,16 @@ export default class ContactCreate extends Component {
 
 
                         <div className="form-row">
-                            <b>Phone numbers</b>
+                            <h3>Phone numbers</h3>
                             {
                                 this.state.contact.phone_numbers.length > 0
-                                    ?   <ul>
-                                            { this.state.contact.phone_numbers.map((p, i) => <li key={i}><b>{p.type}</b> {p.phone_number}</li>) }
+                                    ?   <ul className="form-phone-number-list">
+                                            { this.state.contact.phone_numbers.map((p, i) => <li key={i}><span>{p.type}</span> {p.phone_number}</li>) }
                                         </ul>
-                                    : 'no phone numbers'
+                                    : <div className="no-phone-numbers">no phone numbers</div>
                             }
                             <PhoneInput addPhoneNumber={this.addPhoneNumber} />
+                            { this.displayValidationErrors('phone_numbers') }
 
                         </div>
 
