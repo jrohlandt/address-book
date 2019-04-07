@@ -19,6 +19,7 @@ Route::get('/', function () {
 Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
+Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::prefix('contacts')->middleware(['auth'])->group(function() {
     Route::get('/', 'ContactController@index');
