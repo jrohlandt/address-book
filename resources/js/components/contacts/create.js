@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {NavLink, Redirect} from 'react-router-dom';
+import {Link, NavLink, Redirect} from 'react-router-dom';
 import Ajax from '../../Helpers/AjaxHelper.js';
 
 import PhoneInput from './phone-input.js';
@@ -23,7 +23,6 @@ export default class ContactCreate extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
         this.addPhoneNumber = this.addPhoneNumber.bind(this);
         this.displayValidationErrors = this.displayValidationErrors.bind(this);
     }
@@ -43,10 +42,6 @@ export default class ContactCreate extends Component {
         let contact = {...this.state.contact};
         contact.phone_numbers.push(obj);
         this.setState({contact});
-    }
-
-    handleCancel() {
-        this.setState({redirectToContactList: true});
     }
 
     handleSubmit() {
@@ -91,6 +86,7 @@ export default class ContactCreate extends Component {
     componentDidMount() {
         console.log('create mounted', );
         if (typeof(this.props.match.params.contactId) !== 'undefined') {
+            console.log('edit');
             this.setState({mode: 'edit'});
             Ajax.get('/contacts/'+this.props.match.params.contactId)
                 .then(res => {
@@ -111,11 +107,11 @@ export default class ContactCreate extends Component {
             return (<Redirect to="/contacts" />);
         }
         return (
-            <div className="page-content-container">
+            <div className="wrapper">
 
                 <div className="content">
 
-                    <div>
+                    <div className="create-contact-form">
                         <div className="form-row">
                             <label htmlFor="contact-fname-input">First name:</label>
                             <input
@@ -125,8 +121,8 @@ export default class ContactCreate extends Component {
                                 onChange={this.handleChange}
                                 value={this.state.contact.first_name}
                             />
+                            { this.displayValidationErrors('first_name') }
                         </div>
-                        { this.displayValidationErrors('first_name') }
 
                         <div className="form-row">
                             <label htmlFor="contact-lname-input">Last name:</label>
@@ -137,10 +133,11 @@ export default class ContactCreate extends Component {
                                 onChange={this.handleChange}
                                 value={this.state.contact.last_name}
                             />
+                            { this.displayValidationErrors('last_name') }
                         </div>
-                        { this.displayValidationErrors('last_name') }
 
-                        <div>
+
+                        <div className="form-row">
                             <b>Phone numbers</b>
                             {
                                 this.state.contact.phone_numbers.length > 0
@@ -149,6 +146,8 @@ export default class ContactCreate extends Component {
                                         </ul>
                                     : 'no phone numbers'
                             }
+                            <PhoneInput addPhoneNumber={this.addPhoneNumber} />
+
                         </div>
 
 
@@ -157,13 +156,20 @@ export default class ContactCreate extends Component {
                             {/* todo add email addresses */}
                         </div>
 
-                        <PhoneInput addPhoneNumber={this.addPhoneNumber} />
 
 
                     </div>
 
-                    <button onClick={this.handleCancel}>Cancel</button>
-                    <button onClick={this.handleSubmit}>Save</button>
+                    <div className="form-button-row">
+                        <Link to="/contacts" className="btn btn-default">Cancel</Link>
+                        <div
+                            className="btn btn-cyan"
+                            onClick={this.handleSubmit}
+                            style={{marginLeft: '5px'}}
+                        >
+                            Save
+                        </div>
+                    </div>
 
                 </div>
             </div>

@@ -33146,7 +33146,6 @@ function (_Component) {
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
-    _this.handleCancel = _this.handleCancel.bind(_assertThisInitialized(_this));
     _this.addPhoneNumber = _this.addPhoneNumber.bind(_assertThisInitialized(_this));
     _this.displayValidationErrors = _this.displayValidationErrors.bind(_assertThisInitialized(_this));
     return _this;
@@ -33176,13 +33175,6 @@ function (_Component) {
       contact.phone_numbers.push(obj);
       this.setState({
         contact: contact
-      });
-    }
-  }, {
-    key: "handleCancel",
-    value: function handleCancel() {
-      this.setState({
-        redirectToContactList: true
       });
     }
   }, {
@@ -33245,6 +33237,7 @@ function (_Component) {
       console.log('create mounted');
 
       if (typeof this.props.match.params.contactId !== 'undefined') {
+        console.log('edit');
         this.setState({
           mode: 'edit'
         });
@@ -33272,10 +33265,12 @@ function (_Component) {
       }
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "page-content-container"
+        className: "wrapper"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "content"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "create-contact-form"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "contact-fname-input"
@@ -33285,7 +33280,7 @@ function (_Component) {
         name: "first_name",
         onChange: this.handleChange,
         value: this.state.contact.first_name
-      })), this.displayValidationErrors('first_name'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }), this.displayValidationErrors('first_name')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-row"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
         htmlFor: "contact-lname-input"
@@ -33295,17 +33290,26 @@ function (_Component) {
         name: "last_name",
         onChange: this.handleChange,
         value: this.state.contact.last_name
-      })), this.displayValidationErrors('last_name'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Phone numbers"), this.state.contact.phone_numbers.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.contact.phone_numbers.map(function (p, i) {
+      }), this.displayValidationErrors('last_name')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Phone numbers"), this.state.contact.phone_numbers.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.contact.phone_numbers.map(function (p, i) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
           key: i
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, p.type), " ", p.phone_number);
-      })) : 'no phone numbers'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Email addresses")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      })) : 'no phone numbers', react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_phone_input_js__WEBPACK_IMPORTED_MODULE_3__["default"], {
         addPhoneNumber: this.addPhoneNumber
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleCancel
-      }, "Cancel"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleSubmit
-      }, "Save")));
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, "Email addresses"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-button-row"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/contacts",
+        className: "btn btn-default"
+      }, "Cancel"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "btn btn-cyan",
+        onClick: this.handleSubmit,
+        style: {
+          marginLeft: '5px'
+        }
+      }, "Save"))));
     }
   }]);
 
@@ -33471,7 +33475,7 @@ function (_Component) {
         className: "search-field"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["Link"], {
         to: "/contacts/create",
-        className: "btn btn-new"
+        className: "btn btn-green"
       }, "New Contact")), this.state.contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_contacts_table_js__WEBPACK_IMPORTED_MODULE_5__["default"], {
         contacts: this.state.contacts,
         "delete": this.deleteContact
@@ -33580,12 +33584,14 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(PhoneInput).call(this, props));
     _this.state = {
       phoneNumber: {
-        type: '',
+        type: 'mobile',
         phone_number: ''
-      }
+      },
+      showLabels: false
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.changeLabel = _this.changeLabel.bind(_assertThisInitialized(_this));
+    _this.toggleShowLabels = _this.toggleShowLabels.bind(_assertThisInitialized(_this));
     _this.addPhoneNumber = _this.addPhoneNumber.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -33597,7 +33603,15 @@ function (_React$Component) {
 
       phoneNumber.type = label;
       this.setState({
-        phoneNumber: phoneNumber
+        phoneNumber: phoneNumber,
+        showLabels: false
+      });
+    }
+  }, {
+    key: "toggleShowLabels",
+    value: function toggleShowLabels() {
+      this.setState({
+        showLabels: !this.state.showLabels
       });
     }
   }, {
@@ -33626,7 +33640,7 @@ function (_React$Component) {
       this.props.addPhoneNumber(this.state.phoneNumber);
       this.setState({
         phoneNumber: {
-          type: '',
+          type: 'mobile',
           phone_number: ''
         }
       });
@@ -33639,22 +33653,34 @@ function (_React$Component) {
       var activeLabel = this.state.phoneNumber.type;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "form-row"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Label:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "label"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-        className: activeLabel === 'mobile' ? 'phone-label-active' : '',
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "custom-select"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "custom-select-label",
+        onClick: this.toggleShowLabels
+      }, activeLabel, this.state.showLabels ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+        className: "custom-select-label-list"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'mobile' ? 'custom-select-active' : '',
         onClick: function onClick() {
           return _this2.changeLabel('mobile');
         }
       }, "mobile"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-        className: activeLabel === 'home' ? 'phone-label-active' : '',
+        className: activeLabel === 'home' ? 'custom-select-active' : '',
         onClick: function onClick() {
           return _this2.changeLabel('home');
         }
       }, "home"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-        className: activeLabel === 'office' ? 'phone-label-active' : '',
+        className: activeLabel === 'work' ? 'custom-select-active' : '',
         onClick: function onClick() {
-          return _this2.changeLabel('office');
+          return _this2.changeLabel('work');
         }
-      }, "office"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Phone number:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, "work"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+        className: activeLabel === 'other' ? 'custom-select-active' : '',
+        onClick: function onClick() {
+          return _this2.changeLabel('other');
+        }
+      }, "other")) : ''), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "phone_number",
         onChange: this.handleChange,
@@ -33662,7 +33688,7 @@ function (_React$Component) {
         placeholder: "e.g. +27 82 555 5555"
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.addPhoneNumber
-      }, "Add"));
+      }, "Add")));
     }
   }]);
 

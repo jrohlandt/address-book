@@ -1,0 +1,57 @@
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  text-decoration: none;
+  width: 100px;
+  color: white;
+  background-color: #2a9055;
+  border-bottom: thin solid #257f4b;
+  font-weight: bold;
+  font-size: 0.8em;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.btn:hover {
+  box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+.btn-green {
+  background-color: $green;
+  border-bottom: thin solid darken($green, 10%);
+}
+
+.btn-green:hover {
+  background-color: darken($green, 5%);
+}
+
+.btn-cyan {
+  background-color: $cyan;
+  border-bottom: thin solid darken($cyan, 10%);
+}
+
+.btn-cyan:hover {
+  background-color: darken($cyan, 5%);
+}
+
+.btn-default {
+  background-color: #ababab;
+  border-bottom: thin solid darken(#ababab, 10%);
+}
+
+.btn-default:hover {
+  background-color: darken(#ababab, 5%);
+}
+
+
+@media screen and (min-width: 700px) {
+
+  .btn {
+    padding: 15px;
+    width: 150px;
+    font-size: 1em;
+  }
+}

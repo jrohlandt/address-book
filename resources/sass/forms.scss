@@ -1,0 +1,50 @@
+.create-contact-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  width: 100%;
+  padding: 10px;
+}
+
+.form-button-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 5px;
+}
+
+.custom-select {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.custom-select-label {
+  position: relative;
+  background: #5a6268;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.custom-select-label-list {
+  position: absolute;
+  left: 0;
+  bottom: -1;
+  width: 150px;
+  background: whitesmoke;
+  margin-top: 5px;
+}
+
+.custom-select-label-list li {
+  list-style: none;
+  padding: 5px;
+}
+
+.custom-select-label-list li:hover {
+  background: darken(whitesmoke, 5%);
+}
+
+.custom-select-active {
+  color: $blue;
+}

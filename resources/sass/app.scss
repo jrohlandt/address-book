@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 @import '~normalize.css/normalize.css';
 @import '_variables.scss';
+@import 'forms.scss';
+@import 'buttons.scss';
 @import 'contact-list.scss';
 
 html {
@@ -13,6 +15,11 @@ html {
 body {
   font-family: 'Nunito', sans-serif;
   color: $body-color;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
 }
 
 main {
@@ -31,10 +38,7 @@ header > h1 {
   flex-direction: column;
   width: 100%;
 }
-//.bread-crumbs {
-//  width: 100%;
-//}
-//
+
 .content > div:nth-child(1) {
   display: flex;
   justify-content: space-between;
@@ -50,31 +54,6 @@ header > h1 {
   border: thin solid rgba(0,0,0,0.5);
   border-radius: 3px;
 }
-.btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px;
-  text-decoration: none;
-  width: 100px;
-  color: white;
-  font-weight: bold;
-  font-size: 0.8em;
-  border-radius: 2px;
-}
-
-.btn-new {
-  background-color: #2a9055;
-  border-bottom: thin solid #257f4b;
-}
-
-.btn-new:hover {
-  background-color: #257f4b;
-}
-
-.phone-label-active {
-  color: green;
-}
 
 @media screen and (min-width: 700px) {
 
@@ -83,11 +62,5 @@ header > h1 {
   }
   .wrapper {
     width: 700px;
-  }
-
-  .btn {
-    padding: 15px;
-    width: 150px;
-    font-size: 1em;
   }
 }

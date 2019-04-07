@@ -89,7 +89,7 @@ export default class ContactList extends Component {
                             placeholder="Search by first or last name"
                             className="search-field"
                         />
-                        <Link to="/contacts/create" className="btn btn-new">New Contact</Link>
+                        <Link to="/contacts/create" className="btn btn-green">New Contact</Link>
                     </div>
                     {
                         this.state.contacts.length > 0
