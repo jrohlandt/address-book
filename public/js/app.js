@@ -33194,8 +33194,6 @@ function (_Component) {
   }, {
     key: "addEmailAddress",
     value: function addEmailAddress(obj) {
-      console.log('email ', obj);
-
       if (obj.email_address.length > 256 || obj.email_address.indexOf('@') < 1) {
         var errors = _objectSpread({}, this.state.validationErrors);
 
@@ -33272,19 +33270,17 @@ function (_Component) {
     value: function componentDidMount() {
       var _this3 = this;
 
-      console.log('create mounted');
-
       if (typeof this.props.match.params.contactId === 'undefined') {
         this.setState({
           fetching: false
         });
+        return;
       }
 
       this.setState({
         mode: 'edit'
       });
       _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"].get('/contacts/' + this.props.match.params.contactId).then(function (res) {
-        console.log('contact', res.contact);
         var contact = res.contact;
         contact.phone_numbers = contact.phone_numbers === null ? [] : contact.phone_numbers;
         contact.email_addresses = contact.email_addresses === null ? [] : contact.email_addresses;

@@ -56,7 +56,6 @@ export default class ContactCreate extends Component {
     }
 
     addEmailAddress(obj) {
-        console.log('email ', obj);
         if (obj.email_address.length > 256 || obj.email_address.indexOf('@') < 1) {
             let errors = {...this.state.validationErrors};
             errors.email_addresses = ['Invalid email address'];
@@ -113,15 +112,15 @@ export default class ContactCreate extends Component {
     }
 
     componentDidMount() {
-        console.log('create mounted', );
+
         if (typeof(this.props.match.params.contactId) === 'undefined') {
             this.setState({fetching: false});
+            return;
         }
-        
+
         this.setState({mode: 'edit'});
         Ajax.get('/contacts/'+this.props.match.params.contactId)
             .then(res => {
-                console.log('contact', res.contact);
                 let contact = res.contact;
                 contact.phone_numbers = contact.phone_numbers === null ? [] : contact.phone_numbers;
                 contact.email_addresses = contact.email_addresses === null ? [] : contact.email_addresses;
@@ -130,8 +129,7 @@ export default class ContactCreate extends Component {
             .catch(err => {
                 this.setState({fetching: false});
                 console.error(err);
-            })
-
+            });
     }
 
     render() {
