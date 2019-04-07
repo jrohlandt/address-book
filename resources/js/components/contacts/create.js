@@ -4,6 +4,7 @@ import Ajax from '../../Helpers/AjaxHelper.js';
 
 import PhoneInput from './phone-input.js';
 import EmailInput from './email-input.js';
+import LoadingAnimation from "../loadingAnimation.js";
 
 export default class ContactCreate extends Component {
 
@@ -19,7 +20,7 @@ export default class ContactCreate extends Component {
             validationErrors: {},
             redirectToContactList: false,
             mode: 'create', // or edit
-            // activePhoneNumber: -1,
+            fetching: true,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -113,27 +114,35 @@ export default class ContactCreate extends Component {
 
     componentDidMount() {
         console.log('create mounted', );
-        if (typeof(this.props.match.params.contactId) !== 'undefined') {
-            console.log('edit');
-            this.setState({mode: 'edit'});
-            Ajax.get('/contacts/'+this.props.match.params.contactId)
-                .then(res => {
-                    console.log('contact', res.contact);
-                    let contact = res.contact;
-                    contact.phone_numbers = contact.phone_numbers === null ? [] : contact.phone_numbers;
-                    contact.email_addresses = contact.email_addresses === null ? [] : contact.email_addresses;
-                    this.setState({contact});
-                })
-                .catch(err => {
-                    console.error(err);
-                })
+        if (typeof(this.props.match.params.contactId) === 'undefined') {
+            this.setState({fetching: false});
         }
+        
+        this.setState({mode: 'edit'});
+        Ajax.get('/contacts/'+this.props.match.params.contactId)
+            .then(res => {
+                console.log('contact', res.contact);
+                let contact = res.contact;
+                contact.phone_numbers = contact.phone_numbers === null ? [] : contact.phone_numbers;
+                contact.email_addresses = contact.email_addresses === null ? [] : contact.email_addresses;
+                this.setState({contact, fetching: false});
+            })
+            .catch(err => {
+                this.setState({fetching: false});
+                console.error(err);
+            })
+
     }
 
     render() {
         if (this.state.redirectToContactList === true) {
             return (<Redirect to="/contacts" />);
         }
+
+        if (this.state.fetching === true) {
+            return (<LoadingAnimation/>);
+        }
+
         return (
             <div className="wrapper">
 

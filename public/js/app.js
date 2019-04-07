@@ -33094,6 +33094,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Helpers/AjaxHelper.js */ "./resources/js/Helpers/AjaxHelper.js");
 /* harmony import */ var _phone_input_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./phone-input.js */ "./resources/js/components/contacts/phone-input.js");
 /* harmony import */ var _email_input_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./email-input.js */ "./resources/js/components/contacts/email-input.js");
+/* harmony import */ var _loadingAnimation_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../loadingAnimation.js */ "./resources/js/components/loadingAnimation.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -33122,6 +33123,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var ContactCreate =
 /*#__PURE__*/
 function (_Component) {
@@ -33142,9 +33144,9 @@ function (_Component) {
       },
       validationErrors: {},
       redirectToContactList: false,
-      mode: 'create' // or edit
-      // activePhoneNumber: -1,
-
+      mode: 'create',
+      // or edit
+      fetching: true
     };
     _this.handleChange = _this.handleChange.bind(_assertThisInitialized(_this));
     _this.handleSubmit = _this.handleSubmit.bind(_assertThisInitialized(_this));
@@ -33272,24 +33274,32 @@ function (_Component) {
 
       console.log('create mounted');
 
-      if (typeof this.props.match.params.contactId !== 'undefined') {
-        console.log('edit');
+      if (typeof this.props.match.params.contactId === 'undefined') {
         this.setState({
-          mode: 'edit'
-        });
-        _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"].get('/contacts/' + this.props.match.params.contactId).then(function (res) {
-          console.log('contact', res.contact);
-          var contact = res.contact;
-          contact.phone_numbers = contact.phone_numbers === null ? [] : contact.phone_numbers;
-          contact.email_addresses = contact.email_addresses === null ? [] : contact.email_addresses;
-
-          _this3.setState({
-            contact: contact
-          });
-        })["catch"](function (err) {
-          console.error(err);
+          fetching: false
         });
       }
+
+      this.setState({
+        mode: 'edit'
+      });
+      _Helpers_AjaxHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"].get('/contacts/' + this.props.match.params.contactId).then(function (res) {
+        console.log('contact', res.contact);
+        var contact = res.contact;
+        contact.phone_numbers = contact.phone_numbers === null ? [] : contact.phone_numbers;
+        contact.email_addresses = contact.email_addresses === null ? [] : contact.email_addresses;
+
+        _this3.setState({
+          contact: contact,
+          fetching: false
+        });
+      })["catch"](function (err) {
+        _this3.setState({
+          fetching: false
+        });
+
+        console.error(err);
+      });
     }
   }, {
     key: "render",
@@ -33298,6 +33308,10 @@ function (_Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
           to: "/contacts"
         });
+      }
+
+      if (this.state.fetching === true) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_loadingAnimation_js__WEBPACK_IMPORTED_MODULE_5__["default"], null);
       }
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -33553,6 +33567,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _partials_contacts_table_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./partials/contacts-table.js */ "./resources/js/components/contacts/partials/contacts-table.js");
+/* harmony import */ var _loadingAnimation_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../loadingAnimation.js */ "./resources/js/components/loadingAnimation.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -33578,6 +33593,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var ContactList =
 /*#__PURE__*/
 function (_Component) {
@@ -33593,7 +33609,8 @@ function (_Component) {
       contacts: [],
       placeholderText: 'Loading...',
       success: '',
-      searching: false
+      searching: false,
+      fetching: true
     };
     _this.deleteContact = _this.deleteContact.bind(_assertThisInitialized(_this));
     _this.search = _this.search.bind(_assertThisInitialized(_this));
@@ -33647,15 +33664,23 @@ function (_Component) {
       var _this3 = this;
 
       var searchTerm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+      this.setState({
+        fetching: true
+      });
       var placeHolderText = searchTerm !== '' ? 'No results' : 'You don\'t have any contacts yet.';
       _Helpers_AjaxHelper__WEBPACK_IMPORTED_MODULE_2__["default"].get('/contacts?search=' + searchTerm).then(function (res) {
         var obj = {
           contacts: res.contacts
         };
         obj['placeholderText'] = res.contacts.length > 0 ? '' : placeHolderText;
+        obj['fetching'] = false;
 
         _this3.setState(obj);
       })["catch"](function (err) {
+        _this3.setState({
+          fetching: false
+        });
+
         console.error(err);
       });
     }
@@ -33674,6 +33699,9 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      // if (this.state.fetching) {
+      //     return (<LoadingAnimation/>);
+      // }
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "wrapper"
       }, this.state.success !== '' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", {
@@ -33691,7 +33719,7 @@ function (_Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["Link"], {
         to: "/contacts/create",
         className: "btn btn-green"
-      }, "New Contact")), this.state.contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_contacts_table_js__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      }, "New Contact")), this.state.fetching ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_loadingAnimation_js__WEBPACK_IMPORTED_MODULE_6__["default"], null) : this.state.contacts.length > 0 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_partials_contacts_table_js__WEBPACK_IMPORTED_MODULE_5__["default"], {
         contacts: this.state.contacts,
         "delete": this.deleteContact
       })) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, this.state.placeholderText)));
@@ -33916,6 +33944,33 @@ function (_React$Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 /* harmony default export */ __webpack_exports__["default"] = (PhoneInput);
+
+/***/ }),
+
+/***/ "./resources/js/components/loadingAnimation.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/loadingAnimation.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var LoadingAnimation = function LoadingAnimation(props) {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "loading-overlay"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "loading-container"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Loading"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "lds-ellipsis"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null))));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (LoadingAnimation);
 
 /***/ }),
 

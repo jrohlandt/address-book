@@ -4,6 +4,7 @@ import Ajax from '../../Helpers/AjaxHelper';
 import { FaChalkboard } from "../../app";
 import { NavLink, Link } from "react-router-dom";
 import ContactsTable from "./partials/contacts-table.js";
+import LoadingAnimation from "../loadingAnimation.js";
 
 export default class ContactList extends Component {
 
@@ -15,6 +16,7 @@ export default class ContactList extends Component {
             placeholderText: 'Loading...',
             success: '',
             searching: false,
+            fetching: true,
         };
 
         this.deleteContact = this.deleteContact.bind(this);
@@ -53,14 +55,17 @@ export default class ContactList extends Component {
 
     getContacts(searchTerm='') {
 
+        this.setState({fetching: true});
         let placeHolderText = searchTerm !== '' ? 'No results' : 'You don\'t have any contacts yet.';
         Ajax.get('/contacts?search=' + searchTerm)
             .then(res => {
                 let obj = {contacts: res.contacts};
                 obj['placeholderText'] = res.contacts.length > 0 ? '' : placeHolderText;
+                obj['fetching'] = false;
                 this.setState(obj);
             })
             .catch(err => {
+                this.setState({fetching: false});
                 console.error(err);
             });
     }
@@ -74,6 +79,9 @@ export default class ContactList extends Component {
     }
 
     render() {
+        // if (this.state.fetching) {
+        //     return (<LoadingAnimation/>);
+        // }
         return (
             <div className="wrapper">
 
@@ -92,13 +100,19 @@ export default class ContactList extends Component {
                         <Link to="/contacts/create" className="btn btn-green">New Contact</Link>
                     </div>
                     {
-                        this.state.contacts.length > 0
+                        this.state.fetching
                             ?
-                                <div>
-                                    <ContactsTable contacts={this.state.contacts} delete={this.deleteContact} />
-                                </div>
+                                <LoadingAnimation/>
                             :
-                                <h2>{this.state.placeholderText}</h2>
+                                this.state.contacts.length > 0
+                                    ?
+                                    <div>
+                                        <ContactsTable contacts={this.state.contacts} delete={this.deleteContact} />
+                                    </div>
+                                    :
+                                    <h2>{this.state.placeholderText}</h2>
+
+
                     }
 
                 </div>
