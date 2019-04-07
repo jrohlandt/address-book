@@ -1,3 +1,75 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import '~normalize.css/normalize.css';
+@import 'contact-list.scss';
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  color: #333234;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+//.bread-crumbs {
+//  width: 100%;
+//}
+//
+.content > div:nth-child(1) {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  text-decoration: none;
+  width: 100px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8em;
+  border-radius: 2px;
+}
+
+.btn-new {
+  background-color: #2a9055;
+  border-bottom: thin solid #257f4b;
+}
+
+.btn-new:hover {
+  background-color: #257f4b;
+}
+
 .phone-label-active {
   color: green;
+}
+
+@media screen and (min-width: 700px) {
+  .wrapper {
+    width: 700px;
+  }
+
+  .btn {
+    padding: 15px;
+    width: 150px;
+    font-size: 1em;
+  }
 }

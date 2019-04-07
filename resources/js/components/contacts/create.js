@@ -23,6 +23,7 @@ export default class ContactCreate extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
         this.addPhoneNumber = this.addPhoneNumber.bind(this);
         this.displayValidationErrors = this.displayValidationErrors.bind(this);
     }
@@ -42,6 +43,10 @@ export default class ContactCreate extends Component {
         let contact = {...this.state.contact};
         contact.phone_numbers.push(obj);
         this.setState({contact});
+    }
+
+    handleCancel() {
+        this.setState({redirectToContactList: true});
     }
 
     handleSubmit() {
@@ -107,10 +112,7 @@ export default class ContactCreate extends Component {
         }
         return (
             <div className="page-content-container">
-                <div className="bread-crumbs-container">
-                        <NavLink to="/contacts"><span>Contacts</span></NavLink> /
-                        <div className="current-crumb">{this.state.mode === 'edit' ? 'Edit Contact' : 'New Contact'}</div>
-                </div>
+
                 <div className="content">
 
                     <div>
@@ -160,6 +162,7 @@ export default class ContactCreate extends Component {
 
                     </div>
 
+                    <button onClick={this.handleCancel}>Cancel</button>
                     <button onClick={this.handleSubmit}>Save</button>
 
                 </div>

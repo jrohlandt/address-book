@@ -1,0 +1,22 @@
+
+.contacts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.contacts-table thead th:nth-child(1) {
+  width: 30%;
+  text-align: left;
+}
+
+.contacts-table thead th:nth-child(2) {
+  text-align: left;
+}
+.contacts-table thead th:nth-child(3) {
+  width: 70px;
+}
+
+.contacts-table td {
+  padding: 10px;
+}
+

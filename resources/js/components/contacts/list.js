@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Ajax from '../../Helpers/AjaxHelper';
-import {FaChalkboard} from "../../app";
-import {NavLink} from "react-router-dom";
+import { FaChalkboard } from "../../app";
+import { NavLink, Link } from "react-router-dom";
 import ContactsTable from "./partials/contacts-table.js";
 
 export default class ContactList extends Component {
@@ -26,7 +26,7 @@ export default class ContactList extends Component {
             if (this.state.searching === false) {
                 return;
             } else {
-                // if was previously searching then just get all contacts again.
+                // if user clears out the search input field, then reset the search by getting all contacts again.
                 this.setState({searching: false});
                 this.getContacts();
                 return;
@@ -75,18 +75,16 @@ export default class ContactList extends Component {
 
     render() {
         return (
-            <div className="page-content-container">
-                <div className="bread-crumbs-container">
-                    <ul>
-                        <li><NavLink to="/contacts"><span>Contacts</span></NavLink></li>
-                    </ul>
-                </div>
+            <div className="wrapper">
+
+                { this.state.success !== '' ? <h2 style={{color: 'green'}}>{this.state.success}</h2> : '' }
+
                 <div className="content">
-                    { this.state.success !== '' ? <h2 style={{color: 'green'}}>{this.state.success}</h2> : '' }
 
-                    <li><NavLink to="/contacts/create"><span>New Contact</span></NavLink></li>
-
-                    <input type="text" name="search" onChange={this.search} />
+                    <div>
+                        <input type="text" name="search" onChange={this.search} />
+                        <Link to="/contacts/create" className="btn btn-new">New Contact</Link>
+                    </div>
                     {
                         this.state.contacts.length > 0
                             ?
