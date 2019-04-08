@@ -30,7 +30,7 @@ class ContactController extends Controller
                     ->get();
             }
             else {
-                $contacts = \Auth::User()->contacts()->orderBy('created_at', 'desc')->limit(20)->get();
+                $contacts = \Auth::User()->contacts()->orderBy('first_name', 'asc')->limit(20)->get();
             }
             return response()->json(['contacts' => $contacts]);
         }

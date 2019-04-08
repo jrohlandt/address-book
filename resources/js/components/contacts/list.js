@@ -17,9 +17,12 @@ export default class ContactList extends Component {
             success: '',
             searching: false,
             fetching: true,
+            showDeleteConfirmation: false,
+            deleteContact: {first_name: '', last_name: ''},
         };
 
         this.deleteContact = this.deleteContact.bind(this);
+        this.cancelDelete = this.cancelDelete.bind(this);
         this.search = this.search.bind(this);
     }
 
@@ -39,23 +42,40 @@ export default class ContactList extends Component {
         this.getContacts(e.target.value);
     }
 
-    deleteContact(contactId) {
-        Ajax.delete('/contacts/'+contactId)
+    deleteContact(contact, confirmed=false) {
+
+        if (confirmed !== true) {
+            this.setState({showDeleteConfirmation: true, deleteContact: contact, success: ''});
+            return;
+        }
+
+        Ajax.delete('/contacts/'+contact.id)
             .then(res => {
-                this.setState({success: 'Contact deleted'});
+                const contacts = this.state.contacts.filter(c => c.id !== contact.id);
+                this.setState({
+                    contacts,
+                    success: 'Contact deleted',
+                    showDeleteConfirmation: false,
+                    deleteContact: {first_name: '', last_name: ''}
+                });
             })
             .catch(err => {
-                // todo error notification
+                this.setState({showDeleteConfirmation: false, deleteContact: {first_name: '', last_name: ''}});
                 console.error(err);
             });
+    }
 
-        const contacts = this.state.contacts.filter(c => c.id !== contactId);
-        this.setState({contacts});
+    cancelDelete() {
+        this.setState({showDeleteConfirmation: false, deleteContact: {first_name: '', last_name: ''}, success: ''});
     }
 
     getContacts(searchTerm='') {
 
-        this.setState({fetching: true});
+        let newState = {fetching: true};
+        if (searchTerm !== '') {
+            newState['success'] = ''; // clear success notification.
+        }
+        this.setState(newState);
         let placeHolderText = searchTerm !== '' ? 'No results' : 'You don\'t have any contacts yet.';
         Ajax.get('/contacts?search=' + searchTerm)
             .then(res => {
@@ -85,7 +105,7 @@ export default class ContactList extends Component {
         return (
             <div className="wrapper">
 
-                { this.state.success !== '' ? <h2 style={{color: 'green'}}>{this.state.success}</h2> : '' }
+                { this.state.success !== '' ? <div className="contact-success-notification show">{this.state.success}</div> : '' }
 
                 <div className="content">
 
@@ -104,13 +124,29 @@ export default class ContactList extends Component {
                             ?
                                 <LoadingAnimation/>
                             :
-                                this.state.contacts.length > 0
+                                this.state.showDeleteConfirmation
                                     ?
-                                    <div>
-                                        <ContactsTable contacts={this.state.contacts} delete={this.deleteContact} />
-                                    </div>
+                                        <div className="delete-overlay">
+                                            <p>Are you sure you want to delete contact {this.state.deleteContact.first_name} {this.state.deleteContact.last_name}?</p>
+                                            <div className="delete-button-row">
+                                                <div className="btn btn-default" onClick={this.cancelDelete}>Cancel</div>
+                                                <div
+                                                    className="btn btn-red"
+                                                    onClick={() => this.deleteContact(this.state.deleteContact, true)}
+                                                    style={{marginLeft: '5px'}}
+                                                >
+                                                    Delete
+                                                </div>
+                                            </div>
+                                        </div>
                                     :
-                                    <h2>{this.state.placeholderText}</h2>
+                                        this.state.contacts.length > 0
+                                            ?
+                                            <div>
+                                                <ContactsTable contacts={this.state.contacts} delete={this.deleteContact} />
+                                            </div>
+                                            :
+                                            <h2>{this.state.placeholderText}</h2>
 
 
                     }

@@ -38,12 +38,22 @@
 }
 
 .btn-default {
-  background-color: #ababab;
-  border-bottom: thin solid darken(#ababab, 10%);
+  color: #5a6268;
+  background-color: white;
+  border: thin solid #5a6268;
 }
 
 .btn-default:hover {
-  background-color: darken(#ababab, 5%);
+  background-color: darken(white, 5%);
+}
+
+.btn-red {
+  background-color: $red;
+  border-bottom: thin solid darken($red, 10%);
+}
+
+.btn-red:hover {
+  background-color: darken($red, 5%);
 }
 
 

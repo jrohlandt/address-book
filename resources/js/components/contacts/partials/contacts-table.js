@@ -20,7 +20,7 @@ const ContactsTable = (props) => (
                             <td>{c.first_name}</td>
                             <td>{c.last_name}</td>
                             <td>
-                                <FiTrash className="action-icons" onClick={() => props.delete(c.id)} style={{float: 'right', marginLeft: '5px'}}/>
+                                <FiTrash className="action-icons" onClick={() => props.delete(c)} style={{float: 'right', marginLeft: '5px'}}/>
                                 <Link to={`/contacts/${c.id}/edit`} className="action-icons" style={{float: 'right'}}><FiEdit/></Link>
                             </td>
                         </tr>

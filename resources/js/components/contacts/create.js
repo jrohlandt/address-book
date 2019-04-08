@@ -80,17 +80,18 @@ export default class ContactCreate extends Component {
             url = `/contacts/${this.state.contact.id}`;
         }
 
+        this.setState({fetching: true});
         Ajax[method](url, this.state.contact)
             .then(res => {
                 window.localStorage.setItem('success', 'Contact saved');
-                this.setState({redirectToContactList: true});
+                this.setState({redirectToContactList: true, fetching: false});
             })
             .catch(err => {
                 if (typeof(err.validationErrors) !== 'undefined'/* && err.validationErrors.length > 0*/) {
-                    this.setState({validationErrors: err.validationErrors});
+                    this.setState({validationErrors: err.validationErrors, fetching: false});
                     return;
                 }
-                console.log('other error: ', err);
+                console.error(err);
             });
     }
 
