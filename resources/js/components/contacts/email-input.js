@@ -42,7 +42,7 @@ class EmailInput extends React.Component {
         }
         this.props.addItem(this.state.item);
 
-        if (item.email_address.length > 256 || item.email_address.indexOf('@') < 1) {
+        if (item.email_address.length > 256 || item.email_address.indexOf('@') < 1 || item.email_address.indexOf('.') < 1) {
             return;
         }
         this.setState({item: {type: 'work', email_address: ''}});

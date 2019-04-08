@@ -56,7 +56,7 @@ export default class ContactCreate extends Component {
     }
 
     addEmailAddress(obj) {
-        if (obj.email_address.length > 256 || obj.email_address.indexOf('@') < 1) {
+        if (obj.email_address.length > 256 || obj.email_address.indexOf('@') < 1 || obj.email_address.indexOf('.') < 1) {
             let errors = {...this.state.validationErrors};
             errors.email_addresses = ['Invalid email address'];
             this.setState({validationErrors: errors});
